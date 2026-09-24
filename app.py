@@ -364,6 +364,14 @@ html, body, [class*="css"] {
     color: #17365D;
 }
 
+/* TRANSPORT KPI */
+
+.transport-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
 /* -----------------------------------------------------
    EMPTY STATE
    ----------------------------------------------------- */
@@ -419,7 +427,7 @@ html, body, [class*="css"] {
     }
 
     .itinerary-day {
-        margin-top: 20px;
+        margin-top: 0px;
     }
 
     .itinerary-day-header {
@@ -800,6 +808,9 @@ html, body, [class*="css"] {
             repeat(2, minmax(0, 1fr));
 
         gap: 10px;
+
+        margin-top: -15;
+        margin-bottom: -15;
 
     }
 
@@ -2947,7 +2958,7 @@ nav_html = """
 @media (max-width: 768px) {
 
     .ryanomad-nav {
-        top: 72px;
+        top: 10px;
         left: 12px;
         right: 12px;
         transform: none;
@@ -2963,6 +2974,24 @@ nav_html = """
         scrollbar-width: none;
     }
 
+    .ryanomad-nav-spacer {
+        height: 0;
+    }
+
+    .hero {
+        position: relative;
+        top: 10px;
+        margin-bottom: 0;
+    }
+
+    .stButton {
+        margin-top: -30px;
+    }
+
+    .section-title {
+        margin-top: 10px;
+    }
+
     .ryanomad-nav::-webkit-scrollbar {
         display: none;
     }
@@ -2975,6 +3004,23 @@ nav_html = """
 
     .ryanomad-nav a.top-button {
         padding: 0 11px;
+    }
+
+    /* BOOKING FILTERS — MOBILE ONLY */
+    .st-key-booking_category_filter [data-testid="stWidgetLabel"],
+    .st-key-booking_status_filter [data-testid="stWidgetLabel"] {
+        display: none;
+    }
+
+    .st-key-booking_category_filter,
+    .st-key-booking_status_filter {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+    .transport-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
     }
 }
 
@@ -3413,7 +3459,7 @@ fig_budget.update_layout(
     yanchor="bottom",
     y=1.06,
     xanchor="left",
-    x=0.20,
+    x=0.5,
 
     font=dict(
         size=12,
@@ -5153,6 +5199,11 @@ with filter_col1:
 
         ["ALL"] + booking_categories,
 
+        format_func=lambda x:
+        "All Categories"
+        if x == "ALL"
+        else x.upper(),
+
         key="booking_category_filter"
 
     )
@@ -5165,6 +5216,11 @@ with filter_col2:
         "STATUS",
 
         ["ALL"] + booking_statuses,
+
+        format_func=lambda x:
+        "All Statuses"
+        if x == "ALL"
+        else x.upper(),
 
         key="booking_status_filter"
 
@@ -5728,56 +5784,64 @@ mode_counts = (
 # TRANSPORT KPI
 # =========================================================
 
-tk1, tk2, tk3, tk4 = st.columns(4)
+st.html(
+    f"""
+    <div class="transport-kpi-grid">
 
-with tk1:
-    st.markdown(
-        f"""
         <div class="kpi-card">
-            <div class="kpi-label">Journeys</div>
-            <div class="kpi-value">{total_transport}</div>
+            <div class="kpi-label">
+                Journeys
+            </div>
+
+            <div class="kpi-value">
+                {total_transport}
+            </div>
+
             <div class="kpi-accent"></div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
-with tk2:
-    st.markdown(
-        f"""
+
         <div class="kpi-card">
-            <div class="kpi-label">Distance</div>
-            <div class="kpi-value">{total_distance:,.1f} km</div>
+            <div class="kpi-label">
+                Distance
+            </div>
+
+            <div class="kpi-value">
+                {total_distance:,.1f} km
+            </div>
+
             <div class="kpi-accent"></div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
-with tk3:
-    st.markdown(
-        f"""
+
         <div class="kpi-card">
-            <div class="kpi-label">Travel Time</div>
-            <div class="kpi-value">{total_duration_hours:.1f} h</div>
+            <div class="kpi-label">
+                Travel Time
+            </div>
+
+            <div class="kpi-value">
+                {total_duration_hours:.1f} h
+            </div>
+
             <div class="kpi-accent"></div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
-with tk4:
-    st.markdown(
-        f"""
+
         <div class="kpi-card">
-            <div class="kpi-label">Modes</div>
-            <div class="kpi-value">{len(mode_counts)}</div>
+            <div class="kpi-label">
+                Modes
+            </div>
+
+            <div class="kpi-value">
+                {len(mode_counts)}
+            </div>
+
             <div class="kpi-accent"></div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
+    </div>
+    """
+)
 
 # =========================================================
 # TRANSPORT FILTER
