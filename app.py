@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 import requests
 import re
 import textwrap
+import base64
 from html import escape
 
 # =========================================================
@@ -34,8 +35,32 @@ GIDS = {
 
 
 # =========================================================
+# HERO IMAGE
+# =========================================================
+
+with open("f1_hero.jpg", "rb") as f:
+    hero_image_base64 = base64.b64encode(f.read()).decode()
+
+hero_image_css = (
+    "url(data:image/jpeg;base64,"
+    + hero_image_base64
+    + ")"
+)
+
+# =========================================================
 # CSS
 # =========================================================
+
+st.markdown(
+    f"""
+    <style>
+    :root {{
+        --hero-image: {hero_image_css};
+    }}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 st.markdown(
     """
@@ -116,18 +141,25 @@ html, body, [class*="css"] {
 }
 
 .kpi-label {
-    color: #637B94;
-    font-size: 12px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.25px;
+
+    color: #718398;
+
     text-transform: uppercase;
-    letter-spacing: .8px;
 }
 
 .kpi-value {
-    color: #17365D;
-    font-size: 29px;
+    font-size: 28px;
+    line-height: 1;
+
     font-weight: 800;
-    margin-top: 9px;
+
+    letter-spacing: -0.9px;
+
+    color: #17365D;
 }
 
 .kpi-accent {
@@ -385,6 +417,366 @@ html, body, [class*="css"] {
     color: #71869B;
 }
 
+.trip-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 18px;
+}
+
+/* =====================================================
+   BUDGET FINANCIAL CARD
+   ===================================================== */
+
+.budget-financial-card {
+    position: relative;
+
+    min-height: 190px;
+    padding: 22px 22px 20px 22px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(126,192,238,0.16),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F8FAFC 100%
+        );
+
+    border: 1px solid rgba(190,205,220,0.75);
+    border-radius: 19px;
+
+    box-shadow:
+        0 8px 24px rgba(24,55,90,0.065),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
+}
+
+.budget-financial-item {
+    position: relative;
+    z-index: 2;
+}
+
+.budget-financial-item + .budget-financial-divider {
+    margin-top: 17px;
+}
+
+.budget-financial-divider {
+    height: 1px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #DCE5EF 0%,
+            #EDF2F7 70%,
+            transparent 100%
+        );
+
+    margin-bottom: 17px;
+}
+
+.budget-financial-card .kpi-value {
+    margin-top: 8px;
+    font-size: 28px;
+}
+
+.budget-financial-card .kpi-accent {
+    position: absolute;
+
+    left: 22px;
+    bottom: 16px;
+
+    width: 38px;
+    height: 3px;
+
+    margin: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+
+    border-radius: 999px;
+
+    box-shadow:
+        0 0 8px rgba(79,107,237,0.20);
+}
+
+/* =====================================================
+   BUDGET RACE CARD
+   ===================================================== */
+
+.budget-race-card {
+    position: relative;
+
+    min-height: 150px;
+    padding: 20px 22px 18px 22px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(126,192,238,0.14),
+            transparent 38%
+        ),
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F8FAFC 100%
+        );
+
+    border: 1px solid rgba(190,205,220,0.75);
+    border-radius: 19px;
+
+    box-shadow:
+        0 8px 24px rgba(24,55,90,0.065),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
+}
+
+.budget-race-card .kpi-value {
+    margin-top: 8px;
+    font-size: 32px;
+}
+
+.budget-race {
+    position: relative;
+
+    height: 28px;
+
+    margin-top: 12px;
+}
+
+.budget-race-line {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 13px;
+
+    height: 4px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #B9C7D5 0px,
+            #B9C7D5 7px,
+            transparent 7px,
+            transparent 11px
+        );
+
+    border-radius: 999px;
+}
+
+.budget-race-car {
+    position: absolute;
+
+    top: 0;
+
+    z-index: 3;
+
+    width: 26px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-3px);
+
+    filter:
+        drop-shadow(
+            0 2px 4px rgba(23,54,93,0.24)
+        );
+}
+
+.race-car-body {
+    position: relative;
+
+    display: block;
+
+    width: 25px;
+    height: 11px;
+
+    margin-top: 3px;
+
+    background: #173D63;
+
+    border-radius: 5px 8px 3px 3px;
+}
+
+.race-car-body::before {
+    content: "";
+
+    position: absolute;
+
+    left: 6px;
+    top: -5px;
+
+    width: 11px;
+    height: 7px;
+
+    background: #7EC0EE;
+
+    border-radius: 5px 5px 1px 1px;
+
+    transform: skewX(-18deg);
+}
+
+.race-car-body::after {
+    content: "";
+
+    position: absolute;
+
+    right: -3px;
+    top: 5px;
+
+    width: 5px;
+    height: 3px;
+
+    background: #4F6BED;
+
+    border-radius: 0 3px 3px 0;
+}
+
+.race-car-cockpit {
+    position: absolute;
+
+    left: 9px;
+    top: -3px;
+
+    width: 6px;
+    height: 4px;
+
+    background: #102A47;
+
+    border-radius: 50% 50% 1px 1px;
+
+    z-index: 2;
+}
+
+.race-car-wheel {
+    position: absolute;
+
+    bottom: -4px;
+
+    width: 7px;
+    height: 7px;
+
+    background: #102A47;
+
+    border: 1px solid #DCEAF7;
+
+    border-radius: 50%;
+}
+
+.race-wheel-front {
+    right: 2px;
+}
+
+.race-wheel-rear {
+    left: 3px;
+}
+
+.budget-race-car svg {
+    width: 26px;
+    height: auto;
+
+    display: block;
+}
+
+.budget-finish {
+    position: absolute;
+
+    right: 0;
+    top: -3px;
+
+    z-index: 4;
+
+    width: 18px;
+    height: 27px;
+
+    filter:
+        drop-shadow(
+            0 2px 3px rgba(23,54,93,0.16)
+        );
+}
+
+.finish-flag {
+    position: relative;
+
+    display: block;
+
+    width: 18px;
+    height: 27px;
+}
+
+.flag-pole {
+    position: absolute;
+
+    left: 2px;
+    top: 0;
+
+    width: 2px;
+    height: 27px;
+
+    background: #173D63;
+
+    border-radius: 999px;
+}
+
+.flag-cloth {
+    position: absolute;
+
+    left: 4px;
+    top: 1px;
+
+    width: 13px;
+    height: 9px;
+
+    background:
+        conic-gradient(
+            #173D63 25%,
+            #FFFFFF 0 50%,
+            #173D63 0 75%,
+            #FFFFFF 0
+        );
+
+    background-size: 6px 6px;
+
+    border-radius: 1px;
+
+    box-shadow:
+        0 1px 3px rgba(23,54,93,0.16);
+}
+
+.budget-finish svg {
+    width: 18px;
+    height: 24px;
+
+    display: block;
+}
+
+.budget-race-meta {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 2px;
+
+    color: #8797A8;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing: 0.9px;
+}
+
 /* =====================================================
    MOBILE
    ===================================================== */
@@ -396,16 +788,93 @@ html, body, [class*="css"] {
     }
 
     .hero {
-        padding: 23px 21px;
-        border-radius: 18px;
+        position: relative;
+
+        padding: 28px 21px 25px 21px;
+        min-height: 125px;
+
+        border-radius: 20px;
+
+        background:
+            linear-gradient(
+                105deg,
+                rgba(4, 17, 30, 0.98) 0%,
+                rgba(7, 27, 47, 0.92) 38%,
+                rgba(8, 35, 61, 0.62) 63%,
+                rgba(18, 70, 105, 0.25) 100%
+            ),
+            var(--hero-image);
+
+        background-size: cover;
+        background-position: center right;
+
+        border: 1px solid rgba(126,192,238,0.28);
+
+        box-shadow:
+            0 18px 38px rgba(8,31,53,0.28),
+            0 0 0 1px rgba(255,255,255,0.04),
+            inset 0 1px 0 rgba(255,255,255,0.12);
+
+        overflow: hidden;
+    }
+
+    .hero::after {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        height: 4px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #4DA3E8 0%,
+                #7EC0EE 35%,
+                rgba(126,192,238,0.25) 75%,
+                transparent 100%
+            );
+
+        box-shadow:
+            0 0 12px rgba(77,163,232,0.45);
+
+        pointer-events: none;
     }
 
     .hero-title {
+        position: relative;
+        z-index: 2;
+
         font-size: 31px;
+        line-height: 1;
+
+        letter-spacing: -1.5px;
+
+        color: #FFFFFF;
+
+        text-shadow:
+            0 2px 12px rgba(0,0,0,0.28),
+            0 0 24px rgba(126,192,238,0.08);
     }
 
     .hero-subtitle {
+        position: relative;
+        z-index: 2;
+
+        margin-top: 9px;
+
         font-size: 14px;
+        line-height: 1.4;
+
+        color: #DCEAF7;
+
+        letter-spacing: 0.15px;
+
+        text-shadow:
+            0 1px 6px rgba(0,0,0,0.20);
     }
 
     .section-title {
@@ -413,12 +882,254 @@ html, body, [class*="css"] {
     }
 
     .kpi-card {
-        min-height: 100px;
-        padding: 16px;
+        position: relative;
+
+        min-height: 104px;
+        padding: 18px 19px 17px 19px;
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(126,192,238,0.12),
+                transparent 38%
+            ),
+            linear-gradient(
+                145deg,
+                #FFFFFF 0%,
+                #F8FAFC 100%
+            );
+
+        border: 1px solid rgba(190,205,220,0.75);
+
+        border-radius: 19px;
+
+        box-shadow:
+            0 8px 24px rgba(24,55,90,0.065),
+            inset 0 1px 0 rgba(255,255,255,0.95);
+
+        overflow: hidden;
+    }
+
+    .kpi-featured {
+        background:
+            radial-gradient(
+                circle at 92% 12%,
+                rgba(126,192,238,0.24),
+                transparent 35%
+            ),
+            linear-gradient(
+                135deg,
+                #102A47 0%,
+                #173D63 58%,
+                #245A83 100%
+            );
+
+        border: 1px solid rgba(126,192,238,0.30);
+
+        box-shadow:
+            0 14px 30px rgba(18,52,82,0.20),
+            inset 0 1px 0 rgba(255,255,255,0.10);
+
+        min-height: 112px;
+    }
+
+    .kpi-featured .kpi-label {
+        color: #BFD3E5;
+    }
+
+    .kpi-featured .kpi-value {
+        font-size: 31px;
+        letter-spacing: -1px;
+        color: #FFFFFF;
+    }
+
+    .kpi-featured .kpi-accent {
+        background:
+            linear-gradient(
+                90deg,
+                #7EC0EE 0%,
+                #FFFFFF 100%
+            );
+
+        box-shadow:
+            0 0 10px rgba(126,192,238,0.30);
+    }
+
+    .kpi-card::before {
+        content: "";
+
+        position: absolute;
+
+        width: 90px;
+        height: 90px;
+
+        right: -42px;
+        top: -48px;
+
+        border-radius: 50%;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(79,107,237,0.10) 0%,
+                rgba(79,107,237,0.025) 55%,
+                transparent 72%
+            );
+
+        pointer-events: none;
+    }
+
+    .kpi-label {
+        position: relative;
+        z-index: 2;
+
+        color: #718398;
+
+        font-size: 9.5px;
+        font-weight: 700;
+
+        letter-spacing: 1.35px;
+        line-height: 1.2;
+
+        text-transform: uppercase;
     }
 
     .kpi-value {
-        font-size: 24px;
+        position: relative;
+        z-index: 2;
+
+        margin-top: 9px;
+
+        color: #17365D;
+
+        font-size: 30px;
+        line-height: 1;
+
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .kpi-accent {
+        position: relative;
+        z-index: 2;
+
+        width: 34px;
+        height: 3px;
+
+        margin-top: 14px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #4F6BED 0%,
+                #7EC0EE 100%
+            );
+
+        border-radius: 999px;
+
+        box-shadow:
+            0 0 8px rgba(79,107,237,0.20);
+    }
+
+        .budget-financial-card {
+        min-height: 190px;
+        padding: 20px 19px 19px 19px;
+        border-radius: 19px;
+    }
+
+    .budget-financial-card .kpi-value {
+        font-size: 27px;
+    }
+
+    .budget-financial-card .kpi-accent {
+        left: 19px;
+        bottom: 15px;
+    }
+
+        .budget-race-card {
+        min-height: 150px;
+        padding: 19px 19px 17px 19px;
+        border-radius: 19px;
+    }
+
+    .budget-race-card .kpi-value {
+        font-size: 31px;
+    }
+
+    .budget-race {
+        margin-top: 12px;
+    }
+
+    .budget-actual-wrap {
+        position: relative;
+
+        flex: 1;
+
+        height: 100%;
+    }
+
+    .budget-actual-wrap .budget-lane-bar {
+        position: relative;
+
+        z-index: 2;
+    }
+
+    .budget-overflow {
+        position: absolute;
+
+        left: 100%;
+        top: 0;
+
+        height: 100%;
+
+        background:
+            repeating-linear-gradient(
+                135deg,
+                #D89A3D 0px,
+                #D89A3D 4px,
+                #F1D39B 4px,
+                #F1D39B 8px
+            );
+
+        border-radius: 0 999px 999px 0;
+
+        z-index: 3;
+    }
+
+    .budget-over-value {
+        color: #B97821;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+    .budget-under-value {
+        color: #3D8A72;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+    .budget-on-value {
+        color: #718398;
+
+        font-size: 8px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+    .trip-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .trip-kpi-grid .kpi-featured {
+        grid-column: 1 / -1;
     }
 
     .itinerary-toolbar {
@@ -963,120 +1674,205 @@ html, body, [class*="css"] {
 }
 
 /* =====================================================
-   DESTINATIONS
+   DESTINATIONS — PREMIUM CARDS
    ===================================================== */
 
 .destination-city {
-    margin: 28px 0 12px 0;
+    margin: 30px 0 13px 0;
 
-    font-size: 13px;
+    padding-bottom: 9px;
+
+    font-size: 11px;
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
 
-    color: #637B94;
+    color: #718398;
 
     border-bottom: 1px solid #DCE5EF;
-    padding-bottom: 8px;
 }
+
+
+/* -----------------------------------------------------
+   CARD
+   ----------------------------------------------------- */
 
 .destination-card {
-    background: #FFFFFF;
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F9FBFD 100%
+        );
 
     border: 1px solid #DCE5EF;
-    border-radius: 17px;
+    border-radius: 18px;
 
-    padding: 17px 19px;
-    margin-bottom: 12px;
+    padding: 18px 19px 16px 19px;
+    margin-bottom: 13px;
 
-    box-shadow: 0 5px 16px rgba(28,55,85,.055);
+    box-shadow:
+        0 8px 22px rgba(24,55,90,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
 }
+
+
+/* subtle blue signature */
+
+.destination-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+
+    opacity: 0.75;
+}
+
+
+/* -----------------------------------------------------
+   TOP AREA
+   ----------------------------------------------------- */
 
 .destination-card-top {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
 
-    gap: 15px;
+    gap: 16px;
 }
+
+
+/* -----------------------------------------------------
+   NAME
+   ----------------------------------------------------- */
 
 .destination-name {
     color: #17365D;
 
     font-size: 17px;
-    line-height: 1.35;
+    line-height: 1.3;
 
     font-weight: 800;
+    letter-spacing: -0.25px;
 }
+
 
 .destination-location {
-    margin-top: 4px;
+    margin-top: 5px;
 
-    color: #71869B;
+    color: #7A8EA3;
 
-    font-size: 12px;
+    font-size: 11px;
+    line-height: 1.4;
+
     font-weight: 600;
 }
+
+
+/* -----------------------------------------------------
+   CATEGORY
+   ----------------------------------------------------- */
 
 .destination-tag {
     display: inline-flex;
     align-items: center;
 
-    background: #EEF5FB;
+    background: #F0F6FB;
     color: #315B82;
+
+    border: 1px solid #DCEAF5;
 
     border-radius: 999px;
 
     padding: 5px 9px;
 
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
 
     text-transform: uppercase;
-    letter-spacing: .4px;
+    letter-spacing: .55px;
 
     white-space: nowrap;
 }
 
+
+/* -----------------------------------------------------
+   DESCRIPTION
+   ----------------------------------------------------- */
+
 .destination-description {
-    margin-top: 11px;
+    margin-top: 13px;
 
     color: #637B94;
 
     font-size: 12.5px;
-    line-height: 1.55;
+    line-height: 1.58;
+
+    max-width: 680px;
 }
 
+
+/* -----------------------------------------------------
+   PHOTO SPOTS
+   ----------------------------------------------------- */
+
 .destination-photo {
-    margin-top: 12px;
+    margin-top: 14px;
 
-    padding-top: 11px;
+    padding: 11px 12px;
 
-    border-top: 1px solid #EDF1F5;
+    background: #F7FAFC;
+
+    border: 1px solid #E7EEF4;
+    border-radius: 11px;
 
     color: #637B94;
 
-    font-size: 12px;
+    font-size: 11.5px;
     line-height: 1.5;
 }
+
 
 .destination-label {
     margin-bottom: 4px;
 
-    color: #315B82;
+    color: #58748E;
 
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
 
-    letter-spacing: .6px;
+    letter-spacing: .8px;
 }
+
+
+/* -----------------------------------------------------
+   GOOGLE MAPS CTA
+   ----------------------------------------------------- */
 
 .destination-actions {
     margin-top: 13px;
 
-    padding-top: 11px;
+    padding-top: 12px;
 
-    border-top: 1px solid #EDF1F5;
+    border-top: 1px solid #E8EEF3;
 }
+
 
 .destination-actions a {
     display: inline-flex;
@@ -1089,21 +1885,36 @@ html, body, [class*="css"] {
 
     border: 1px solid #D7E5F2;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    padding: 7px 11px;
+    padding: 8px 12px;
 
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
 
-    letter-spacing: .3px;
+    letter-spacing: .45px;
+
+    transition:
+        background .18s ease,
+        border-color .18s ease,
+        transform .18s ease;
 }
 
+
 .destination-actions a:hover {
-    background: #E2EFF9;
+    background: #E4F0F9;
+
     border-color: #BFD7EB;
+
     color: #17365D;
+
+    transform: translateY(-1px);
 }
+
+
+/* -----------------------------------------------------
+   EMPTY STATE
+   ----------------------------------------------------- */
 
 .destination-empty {
     background: #FFFFFF;
@@ -1118,6 +1929,7 @@ html, body, [class*="css"] {
     color: #71869B;
 }
 
+
 /* =====================================================
    DESTINATIONS — MOBILE
    ===================================================== */
@@ -1128,42 +1940,85 @@ html, body, [class*="css"] {
         margin-top: 22px;
         margin-bottom: 10px;
 
-        font-size: 12px;
+        font-size: 11px;
+        letter-spacing: 1.3px;
     }
+
 
     .destination-card {
-        padding: 14px;
-        border-radius: 15px;
+        padding: 15px 15px 14px 15px;
+
+        border-radius: 16px;
+
+        margin-bottom: 11px;
     }
 
+
     .destination-card-top {
-        gap: 10px;
+        gap: 9px;
     }
+
 
     .destination-name {
         font-size: 15px;
+        line-height: 1.32;
     }
 
+
     .destination-location {
+        margin-top: 4px;
+
+        font-size: 10.5px;
+    }
+
+
+    .destination-tag {
+        padding: 4px 7px;
+
+        font-size: 8px;
+        letter-spacing: .45px;
+    }
+
+
+    .destination-description {
+        margin-top: 11px;
+
+        font-size: 11.5px;
+        line-height: 1.55;
+    }
+
+
+    .destination-photo {
+        margin-top: 12px;
+
+        padding: 10px 11px;
+
+        border-radius: 10px;
+
         font-size: 11px;
     }
 
-    .destination-tag {
-        font-size: 9px;
-        padding: 4px 7px;
+
+    .destination-label {
+        font-size: 8.5px;
     }
 
-    .destination-description {
-        font-size: 12px;
+
+    .destination-actions {
+        margin-top: 11px;
+
+        padding-top: 10px;
     }
 
-    .destination-photo {
-        font-size: 11.5px;
-    }
 
     .destination-actions a {
-        font-size: 9px;
-        padding: 7px 9px;
+        width: 100%;
+
+        justify-content: center;
+
+        padding: 8px 10px;
+
+        font-size: 8.5px;
     }
 }
 
@@ -1458,6 +2313,1375 @@ body:has(#motor-rental:target)
     color: #ffffff !important;
 
     border-radius: 999px;
+
+}
+
+/* =====================================================
+   ITINERARY — PREMIUM TIMELINE OVERRIDE
+   ===================================================== */
+
+.itinerary-day {
+    margin: 24px 0 22px 0;
+}
+
+
+/* -----------------------------------------------------
+   DAY HEADER
+   ----------------------------------------------------- */
+
+.itinerary-day-header {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(126,192,238,0.24),
+            transparent 42%
+        ),
+        linear-gradient(
+            135deg,
+            #102A47 0%,
+            #173D63 58%,
+            #245A83 100%
+        );
+
+    border: 1px solid rgba(126,192,238,0.25);
+
+    border-radius: 17px;
+
+    padding: 13px 16px;
+
+    box-shadow:
+        0 10px 24px rgba(18,52,82,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.10);
+}
+
+
+.itinerary-day-name {
+    font-size: 16px;
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    letter-spacing: -0.2px;
+
+    color: #FFFFFF;
+}
+
+
+.itinerary-day-meta {
+    margin-top: 3px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    letter-spacing: .15px;
+
+    color: #BFD3E5;
+}
+
+
+.itinerary-day-count {
+    flex-shrink: 0;
+
+    background: rgba(255,255,255,0.10);
+
+    border: 1px solid rgba(255,255,255,0.20);
+
+    border-radius: 999px;
+
+    padding: 5px 9px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    color: #FFFFFF;
+
+    white-space: nowrap;
+}
+
+
+/* -----------------------------------------------------
+   TIMELINE
+   ----------------------------------------------------- */
+
+.itinerary-timeline {
+    position: relative;
+
+    margin-top: 11px;
+
+    padding: 2px 0 3px 0;
+}
+
+
+.itinerary-timeline::before {
+    left: 76px;
+
+    top: 17px;
+    bottom: 17px;
+
+    width: 2px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #BFD3E5 0%,
+            #DCE5EF 100%
+        );
+}
+
+
+/* -----------------------------------------------------
+   ITEM
+   ----------------------------------------------------- */
+
+.itinerary-item {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns: 62px minmax(0, 1fr);
+
+    column-gap: 27px;
+
+    margin-bottom: 11px;
+}
+
+
+/* -----------------------------------------------------
+   TIME
+   ----------------------------------------------------- */
+
+.itinerary-time {
+    text-align: right;
+
+    padding-top: 16px;
+
+    font-size: 10.5px;
+
+    line-height: 1.35;
+
+    font-weight: 800;
+
+    color: #526A82;
+}
+
+
+/* -----------------------------------------------------
+   DOT
+   ----------------------------------------------------- */
+
+.itinerary-dot {
+    left: 69px;
+
+    top: 20px;
+
+    width: 14px;
+    height: 14px;
+
+    background: #7EC0EE;
+
+    border: 4px solid #F4F7FB;
+
+    box-shadow:
+        0 0 0 2px #7EC0EE,
+        0 2px 5px rgba(79,107,237,0.16);
+
+    z-index: 2;
+}
+
+
+/* -----------------------------------------------------
+   CARD
+   ----------------------------------------------------- */
+
+.itinerary-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F9FBFD 100%
+        );
+
+    border: 1px solid #DCE5EF;
+
+    border-radius: 16px;
+
+    padding: 14px 15px 13px 15px;
+
+    box-shadow:
+        0 7px 18px rgba(24,55,90,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+
+.itinerary-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 12px;
+    bottom: 12px;
+
+    width: 3px;
+
+    border-radius: 0 999px 999px 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+
+    opacity: .72;
+}
+
+
+/* -----------------------------------------------------
+   CARD TOP
+   ----------------------------------------------------- */
+
+.itinerary-card-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+}
+
+
+.itinerary-type {
+    background: #EEF5FB;
+
+    color: #315B82;
+
+    border: 1px solid #DCEAF5;
+
+    border-radius: 999px;
+
+    padding: 4px 8px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .5px;
+}
+
+
+.itinerary-duration {
+    color: #8797A8;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* -----------------------------------------------------
+   TITLE
+   ----------------------------------------------------- */
+
+.itinerary-title {
+    color: #17365D;
+
+    font-size: 16px;
+
+    line-height: 1.35;
+
+    font-weight: 800;
+
+    letter-spacing: -.2px;
+
+    margin: 0 0 6px 0;
+}
+
+
+/* -----------------------------------------------------
+   PLACE
+   ----------------------------------------------------- */
+
+.itinerary-place {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    color: #4F6B86;
+
+    font-size: 11.5px;
+
+    font-weight: 700;
+
+    margin-bottom: 6px;
+}
+
+
+/* -----------------------------------------------------
+   TRANSPORT MODE
+   ----------------------------------------------------- */
+
+.itinerary-mode {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    color: #637B94;
+
+    background: #F5F8FB;
+
+    border: 1px solid #E8EEF4;
+
+    border-radius: 8px;
+
+    padding: 4px 7px;
+
+    font-size: 10px;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+
+/* -----------------------------------------------------
+   NOTE
+   ----------------------------------------------------- */
+
+.itinerary-note {
+    color: #6C8095;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+    border-top: 1px solid #EDF1F5;
+
+    padding-top: 8px;
+
+    margin-top: 5px;
+}
+
+
+/* -----------------------------------------------------
+   BOOKING
+   ----------------------------------------------------- */
+
+.itinerary-booking {
+    margin-top: 9px;
+
+    padding-top: 9px;
+
+    border-top: 1px solid #EDF1F5;
+}
+
+
+.itinerary-booking a {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+
+    background: #EEF5FB;
+
+    color: #315B82;
+
+    border: 1px solid #D7E5F2;
+
+    border-radius: 9px;
+
+    padding: 6px 9px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .35px;
+}
+
+
+/* =====================================================
+   ITINERARY — MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .itinerary-day {
+        margin: 19px 0 18px 0;
+    }
+
+
+    .itinerary-day-header {
+        border-radius: 15px;
+
+        padding: 11px 13px;
+
+        gap: 9px;
+    }
+
+
+    .itinerary-day-name {
+        font-size: 15px;
+    }
+
+
+    .itinerary-day-meta {
+        font-size: 9px;
+
+        margin-top: 2px;
+    }
+
+
+    .itinerary-day-count {
+        padding: 5px 8px;
+
+        font-size: 9px;
+    }
+
+
+    .itinerary-timeline {
+        margin-top: 9px;
+    }
+
+
+    .itinerary-timeline::before {
+        left: 61px;
+
+        top: 15px;
+        bottom: 15px;
+    }
+
+
+    .itinerary-item {
+        grid-template-columns: 50px minmax(0, 1fr);
+
+        column-gap: 23px;
+
+        margin-bottom: 9px;
+    }
+
+
+    .itinerary-time {
+        padding-top: 15px;
+
+        font-size: 10px;
+    }
+
+
+    .itinerary-dot {
+        left: 54px;
+
+        top: 19px;
+
+        width: 13px;
+        height: 13px;
+
+        border-width: 4px;
+    }
+
+
+    .itinerary-card {
+        border-radius: 15px;
+
+        padding: 13px 13px 12px 13px;
+    }
+
+
+    .itinerary-card::before {
+        top: 11px;
+        bottom: 11px;
+    }
+
+
+    .itinerary-card-top {
+        margin-bottom: 7px;
+    }
+
+
+    .itinerary-type {
+        padding: 4px 7px;
+
+        font-size: 8.5px;
+    }
+
+
+    .itinerary-title {
+        font-size: 15.5px;
+
+        line-height: 1.34;
+    }
+
+
+    .itinerary-place {
+        font-size: 11px;
+
+        margin-bottom: 5px;
+    }
+
+
+    .itinerary-mode {
+        font-size: 9.5px;
+
+        padding: 4px 7px;
+    }
+
+
+    .itinerary-note {
+        font-size: 10.5px;
+    }
+
+
+    .itinerary-booking a {
+        width: 100%;
+
+        font-size: 8.5px;
+
+        padding: 7px 9px;
+    }
+}
+
+/* =====================================================
+   BOOKINGS — PREMIUM TRAVEL CARDS
+   ===================================================== */
+
+.booking-kpi-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-top: 12px;
+    margin-bottom: 18px;
+}
+
+
+.booking-kpi-card {
+    position: relative;
+
+    min-height: 102px;
+
+    padding: 17px 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F8FAFC 100%
+        );
+
+    border: 1px solid #DCE5EF;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 7px 20px rgba(24,55,90,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
+}
+
+
+.booking-kpi-card::after {
+    content: "";
+
+    position: absolute;
+
+    left: 18px;
+    bottom: 13px;
+
+    width: 30px;
+    height: 3px;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+}
+
+
+.booking-kpi-label {
+    position: relative;
+    z-index: 2;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.15px;
+
+    color: #718398;
+}
+
+
+.booking-kpi-value {
+    position: relative;
+    z-index: 2;
+
+    margin-top: 9px;
+
+    font-size: 28px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -0.8px;
+
+    color: #17365D;
+}
+
+
+/* -----------------------------------------------------
+   BOOKING CARD
+   ----------------------------------------------------- */
+
+.booking-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F9FBFD 100%
+        );
+
+    border: 1px solid #DCE5EF;
+
+    border-radius: 18px;
+
+    padding: 17px 18px 16px 18px;
+
+    margin-bottom: 13px;
+
+    box-shadow:
+        0 8px 22px rgba(24,55,90,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
+}
+
+
+/* blue signature line */
+
+.booking-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+
+    opacity: .72;
+}
+
+
+/* -----------------------------------------------------
+   TOP
+   ----------------------------------------------------- */
+
+.booking-card-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.booking-icon {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    background: #F1F6FA;
+
+    border: 1px solid #E1EAF1;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+
+/* -----------------------------------------------------
+   STATUS
+   ----------------------------------------------------- */
+
+.booking-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 8.5px;
+
+    font-weight: 800;
+
+    letter-spacing: .6px;
+
+    white-space: nowrap;
+}
+
+
+.booking-status.booked {
+    background: #EAF5EF;
+
+    border: 1px solid #D4E9DC;
+
+    color: #397A57;
+}
+
+
+.booking-status.to-book {
+    background: #FFF4D8;
+
+    border: 1px solid #F1E1B5;
+
+    color: #9A6A00;
+}
+
+
+.booking-status.check-availability {
+    background: #EEF5FB;
+
+    border: 1px solid #D9E7F3;
+
+    color: #315B82;
+}
+
+
+/* -----------------------------------------------------
+   CATEGORY
+   ----------------------------------------------------- */
+
+.booking-category {
+    margin-top: 13px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.05px;
+
+    color: #8192A3;
+
+    text-transform: uppercase;
+}
+
+
+/* -----------------------------------------------------
+   ITEM
+   ----------------------------------------------------- */
+
+.booking-item {
+    margin-top: 4px;
+
+    font-size: 17px;
+
+    line-height: 1.32;
+
+    font-weight: 800;
+
+    letter-spacing: -.25px;
+
+    color: #17365D;
+}
+
+
+/* -----------------------------------------------------
+   DATE
+   ----------------------------------------------------- */
+
+.booking-date {
+    margin-top: 9px;
+
+    font-size: 11.5px;
+
+    font-weight: 700;
+
+    color: #526A82;
+}
+
+
+/* -----------------------------------------------------
+   PROVIDER
+   ----------------------------------------------------- */
+
+.booking-provider {
+    margin-top: 4px;
+
+    font-size: 11.5px;
+
+    color: #7A8EA3;
+}
+
+
+/* -----------------------------------------------------
+   META
+   ----------------------------------------------------- */
+
+.booking-meta {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    margin-top: 14px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #E8EEF3;
+}
+
+
+.booking-meta span {
+    display: block;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .8px;
+
+    color: #8A9AAC;
+}
+
+
+.booking-meta strong {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 12px;
+
+    color: #315B82;
+}
+
+
+.booking-meta strong.high {
+    color: #B97821;
+}
+
+
+/* -----------------------------------------------------
+   NOTES
+   ----------------------------------------------------- */
+
+.booking-notes {
+    margin-top: 11px;
+
+    padding: 9px 10px;
+
+    background: #F7FAFC;
+
+    border: 1px solid #E7EEF4;
+
+    border-radius: 9px;
+
+    font-size: 10.5px;
+
+    line-height: 1.5;
+
+    color: #637B94;
+}
+
+
+/* -----------------------------------------------------
+   BOOKING LINK
+   ----------------------------------------------------- */
+
+.booking-link {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-top: 11px;
+
+    padding: 8px 10px;
+
+    border-radius: 9px;
+
+    text-align: center;
+
+    text-decoration: none !important;
+
+    font-size: 8.5px;
+
+    font-weight: 800;
+
+    letter-spacing: .55px;
+
+    color: #315B82 !important;
+
+    background: #EEF5FB;
+
+    border: 1px solid #D7E5F2;
+}
+
+
+.booking-link:hover {
+    background: #E4F0F9;
+
+    border-color: #BFD7EB;
+}
+
+
+/* =====================================================
+   BOOKINGS — MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .booking-kpi-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+
+        margin-top: 12px;
+        margin-bottom: 17px;
+    }
+
+
+    .booking-kpi-card {
+        min-height: 88px;
+
+        padding: 14px 15px;
+
+        border-radius: 17px;
+    }
+
+
+    .booking-kpi-label {
+        font-size: 8.5px;
+
+        letter-spacing: 1px;
+    }
+
+
+    .booking-kpi-value {
+        margin-top: 8px;
+
+        font-size: 25px;
+    }
+
+
+    .booking-kpi-card::after {
+        left: 15px;
+        bottom: 11px;
+
+        width: 28px;
+        height: 3px;
+    }
+
+
+    .booking-card {
+        padding: 15px 15px 14px 15px;
+
+        border-radius: 16px;
+
+        margin-bottom: 11px;
+    }
+
+
+    .booking-icon {
+        width: 32px;
+        height: 32px;
+
+        border-radius: 9px;
+
+        font-size: 17px;
+    }
+
+
+    .booking-status {
+        padding: 5px 8px;
+
+        font-size: 8px;
+    }
+
+
+    .booking-category {
+        margin-top: 11px;
+
+        font-size: 8.5px;
+    }
+
+
+    .booking-item {
+        font-size: 16px;
+    }
+
+
+    .booking-date {
+        font-size: 11px;
+    }
+
+
+    .booking-provider {
+        font-size: 11px;
+    }
+
+
+    .booking-meta {
+        margin-top: 12px;
+
+        padding-top: 11px;
+
+        gap: 10px;
+    }
+
+
+    .booking-meta span {
+        font-size: 7.5px;
+    }
+
+
+    .booking-meta strong {
+        font-size: 11.5px;
+    }
+
+
+    .booking-notes {
+        font-size: 10px;
+
+        padding: 8px 9px;
+    }
+
+
+    .booking-link {
+        margin-top: 10px;
+
+        padding: 8px;
+
+        font-size: 8px;
+    }
+}
+
+/* =====================================================
+   TRANSPORT — PREMIUM JOURNEY CARDS
+   ===================================================== */
+
+.transport-card {
+    position: relative;
+
+    background:
+        linear-gradient(
+            145deg,
+            #FFFFFF 0%,
+            #F9FBFD 100%
+        );
+
+    border: 1px solid #DCE5EF;
+
+    border-radius: 18px;
+
+    padding: 17px 18px 15px 18px;
+
+    margin-bottom: 12px;
+
+    box-shadow:
+        0 8px 22px rgba(24,55,90,0.055),
+        inset 0 1px 0 rgba(255,255,255,0.95);
+
+    overflow: hidden;
+}
+
+
+/* blue signature */
+
+.transport-card::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #4F6BED 0%,
+            #7EC0EE 100%
+        );
+
+    opacity: .72;
+}
+
+
+/* -----------------------------------------------------
+   DATE
+   ----------------------------------------------------- */
+
+.transport-date {
+    margin-bottom: 12px;
+
+    color: #718398;
+
+    font-size: 9.5px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+/* -----------------------------------------------------
+   ROUTE
+   ----------------------------------------------------- */
+
+.transport-route {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0,1fr)
+        34px
+        minmax(0,1fr);
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.transport-location {
+    color: #17365D;
+
+    font-size: 15px;
+
+    line-height: 1.3;
+
+    font-weight: 800;
+
+    letter-spacing: -.15px;
+}
+
+
+.transport-destination {
+    text-align: right;
+}
+
+
+.transport-arrow {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #7EC0EE;
+
+    font-size: 17px;
+
+    font-weight: 800;
+}
+
+
+/* -----------------------------------------------------
+   META BADGES
+   ----------------------------------------------------- */
+
+.transport-meta {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 13px;
+}
+
+
+.transport-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+    background: #F4F8FB;
+
+    border: 1px solid #E6EDF3;
+
+    color: #526A82;
+
+    border-radius: 999px;
+
+    padding: 5px 8px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+
+.transport-cost {
+    color: #315B82;
+
+    font-weight: 800;
+}
+
+
+/* -----------------------------------------------------
+   COUNTRY / NOTE
+   ----------------------------------------------------- */
+
+.transport-note {
+    margin-top: 11px;
+
+    padding-top: 10px;
+
+    border-top: 1px solid #E8EEF3;
+
+    color: #718398;
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   MOBILE
+   ===================================================== */
+
+@media (max-width: 768px) {
+
+    .transport-card {
+        padding: 15px 15px 14px 15px;
+
+        border-radius: 16px;
+
+        margin-bottom: 11px;
+    }
+
+
+    .transport-date {
+        margin-bottom: 11px;
+
+        font-size: 9px;
+    }
+
+
+    .transport-route {
+        grid-template-columns:
+            minmax(0,1fr)
+            28px
+            minmax(0,1fr);
+
+        gap: 7px;
+    }
+
+
+    .transport-location {
+        font-size: 13.5px;
+
+        line-height: 1.35;
+    }
+
+
+    .transport-arrow {
+        font-size: 15px;
+    }
+
+
+    .transport-meta {
+        gap: 5px;
+
+        margin-top: 11px;
+    }
+
+
+    .transport-badge {
+        padding: 5px 7px;
+
+        font-size: 9.5px;
+    }
+
+
+    .transport-note {
+        margin-top: 10px;
+
+        padding-top: 9px;
+
+        font-size: 10.5px;
+    }
+}
+
+/* =====================================================
+   TRANSPORT KPI — COMPACT
+   ===================================================== */
+
+.transport-kpi-grid .kpi-value {
+    font-size: 24px;
+    letter-spacing: -0.7px;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+
+    .transport-kpi-grid .kpi-value {
+        font-size: 22px;
+        letter-spacing: -0.6px;
+        white-space: nowrap;
+    }
 
 }
 
@@ -2968,7 +5192,25 @@ nav_html = """
 
         justify-content: flex-start;
 
+        padding: 5px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(12, 31, 52, 0.96),
+                rgba(19, 52, 82, 0.92)
+            );
+
+        border: 1px solid rgba(126,192,238,0.22);
+
         border-radius: 18px;
+
+        box-shadow:
+            0 8px 22px rgba(8,28,48,0.22),
+            inset 0 1px 0 rgba(255,255,255,0.08);
+
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
 
         overflow-x: auto;
         scrollbar-width: none;
@@ -2988,8 +5230,75 @@ nav_html = """
         margin-top: -30px;
     }
 
+    .stButton > button {
+        background: rgba(255,255,255,0.72) !important;
+        color: #526A82 !important;
+
+        border: 1px solid #D8E3ED !important;
+        border-radius: 14px !important;
+
+        box-shadow:
+            0 5px 14px rgba(28,55,85,0.06),
+            inset 0 1px 0 rgba(255,255,255,0.9);
+
+        font-family: Inter, sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+
+        letter-spacing: 0.1px;
+
+        transition: all 0.18s ease;
+    }
+
+    .stButton > button:hover {
+        background: #FFFFFF !important;
+        border-color: #BFD0DF !important;
+        color: #203A5F !important;
+
+        box-shadow:
+            0 7px 18px rgba(28,55,85,0.09);
+    }
+
     .section-title {
-        margin-top: 10px;
+        position: relative;
+
+        padding-left: 13px;
+
+        font-size: 22px;
+        line-height: 1.15;
+
+        font-weight: 800;
+
+        color: #203A5F;
+
+        letter-spacing: -0.45px;
+
+        margin-top: 18px;
+        margin-bottom: 16px;
+    }
+
+    .section-title::before {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 3px;
+
+        width: 4px;
+        height: calc(100% - 6px);
+
+        border-radius: 999px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #4F6BED 0%,
+                #7EC0EE 100%
+            );
+
+        box-shadow:
+            0 0 8px rgba(79,107,237,0.22);
     }
 
     .ryanomad-nav::-webkit-scrollbar {
@@ -2999,7 +5308,33 @@ nav_html = """
     .ryanomad-nav a {
         height: 32px;
         padding: 0 13px;
+
+        color: #B8C9D9;
+
         font-size: 9px;
+        font-weight: 700;
+
+        letter-spacing: 0.55px;
+    }
+
+    .ryanomad-nav a:hover {
+        background: rgba(126,192,238,0.10);
+        color: #FFFFFF;
+    }
+
+    .ryanomad-nav a.active {
+        background:
+            linear-gradient(
+                135deg,
+                #3D82B5,
+                #245A83
+            );
+
+        color: #FFFFFF;
+
+        box-shadow:
+            0 3px 10px rgba(43,96,144,0.35),
+            inset 0 1px 0 rgba(255,255,255,0.12);
     }
 
     .ryanomad-nav a.top-button {
@@ -3067,75 +5402,91 @@ nav_html = """
 
 <script>
 
-function updateActiveNav() {
-
-    const currentHash = window.location.hash;
-
-    const navLinks = document.querySelectorAll(
-        ".ryanomad-nav a:not(.top-button)"
-    );
-
-    navLinks.forEach(function(link) {
-
-        link.classList.remove("active");
-
-        if (link.getAttribute("href") === currentHash) {
-
-            link.classList.add("active");
-
-        }
-
-    });
-
-}
-
-
-window.addEventListener(
-    "hashchange",
-    updateActiveNav
-);
-
-
-document.addEventListener(
-    "DOMContentLoaded",
-    updateActiveNav
-);
-
-
-updateActiveNav();
-
-</script>
-
-<script>
 (function () {
 
-    const navLinks = document.querySelectorAll(
-        '.ryanomad-nav a:not(.top-button)'
-    );
+    const nav =
+        document.querySelector(".ryanomad-nav");
 
-    function updateActiveNav() {
+    if (!nav) return;
 
-        const hash = window.location.hash || '#budget-overview';
+    const navLinks =
+        nav.querySelectorAll(
+            "a:not(.top-button)"
+        );
+
+
+    function updateActiveNav(hash) {
 
         navLinks.forEach(function (link) {
 
-            if (link.getAttribute('href') === hash) {
-                link.classList.add('active');
+            if (
+                link.getAttribute("href")
+                === hash
+            ) {
+
+                link.classList.add("active");
+
             } else {
-                link.classList.remove('active');
+
+                link.classList.remove("active");
+
             }
 
         });
+
     }
 
-    updateActiveNav();
 
-    window.addEventListener(
-        'hashchange',
-        updateActiveNav
+    navLinks.forEach(function (link) {
+
+        link.addEventListener(
+            "click",
+            function (event) {
+
+                const targetId =
+                    link.getAttribute("href");
+
+                if (
+                    !targetId ||
+                    !targetId.startsWith("#")
+                ) {
+                    return;
+                }
+
+                const target =
+                    document.querySelector(
+                        targetId
+                    );
+
+                if (!target) {
+                    return;
+                }
+
+                event.preventDefault();
+
+
+                target.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start"
+                });
+
+                updateActiveNav(
+                    targetId
+                );
+
+            }
+        );
+
+    });
+
+
+    updateActiveNav(
+        window.location.hash
+        || "#budget-overview"
     );
 
 })();
+
 </script>
 """
 
@@ -3174,72 +5525,43 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-k1, k2, k3, k4, k5 = st.columns(5)
+st.html(
+    f"""
+    <div class="trip-kpi-grid">
 
-with k1:
+        <div class="kpi-card kpi-featured">
+            <div class="kpi-label">Total Budget</div>
+            <div class="kpi-value">{rupiah(total_budget)}</div>
+            <div class="kpi-accent"></div>
+        </div>
 
-    st.markdown(
-        f"""
-<div class="kpi-card">
-    <div class="kpi-label">Total Budget</div>
-    <div class="kpi-value">{rupiah(total_budget)}</div>
-    <div class="kpi-accent"></div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+        <div class="kpi-card">
+            <div class="kpi-label">Places</div>
+            <div class="kpi-value">{len(places)}</div>
+            <div class="kpi-accent"></div>
+        </div>
 
-with k2:
+        <div class="kpi-card">
+            <div class="kpi-label">Itinerary Items</div>
+            <div class="kpi-value">{len(itinerary)}</div>
+            <div class="kpi-accent"></div>
+        </div>
 
-    st.markdown(
-        f"""
-<div class="kpi-card">
-    <div class="kpi-label">Places</div>
-    <div class="kpi-value">{len(places)}</div>
-    <div class="kpi-accent"></div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+        <div class="kpi-card">
+            <div class="kpi-label">Transport</div>
+            <div class="kpi-value">{len(transport)}</div>
+            <div class="kpi-accent"></div>
+        </div>
 
-with k3:
+        <div class="kpi-card">
+            <div class="kpi-label">Planned Hours</div>
+            <div class="kpi-value">{hours(total_planned_hours)}</div>
+            <div class="kpi-accent"></div>
+        </div>
 
-    st.markdown(
-        f"""
-<div class="kpi-card">
-    <div class="kpi-label">Itinerary Items</div>
-    <div class="kpi-value">{len(itinerary)}</div>
-    <div class="kpi-accent"></div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-with k4:
-
-    st.markdown(
-        f"""
-<div class="kpi-card">
-    <div class="kpi-label">Transport</div>
-    <div class="kpi-value">{len(transport)}</div>
-    <div class="kpi-accent"></div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
-
-with k5:
-
-    st.markdown(
-        f"""
-<div class="kpi-card">
-    <div class="kpi-label">Planned Hours</div>
-    <div class="kpi-value">{hours(total_planned_hours)}</div>
-    <div class="kpi-accent"></div>
-</div>
-""",
-        unsafe_allow_html=True
-    )
+    </div>
+    """
+)
 
 
 # =========================================================
@@ -3265,25 +5587,6 @@ b1, b2, b3 = st.columns(3)
 
 with b1:
 
-    st.html(
-        f"""
-        <div class="kpi-card">
-            <div class="kpi-label">
-                Real Expense
-            </div>
-
-            <div class="kpi-value">
-                Rp {rupiah(total_actual)}
-            </div>
-
-            <div class="kpi-accent"></div>
-        </div>
-        """
-    )
-
-
-with b2:
-
     remaining_label = (
         f"Rp {rupiah(total_remaining)}"
         if total_remaining >= 0
@@ -3292,16 +5595,36 @@ with b2:
 
     st.html(
         f"""
-        <div class="kpi-card">
-            <div class="kpi-label">
-                Remaining
+        <div class="budget-financial-card">
+
+            <div class="budget-financial-item">
+
+                <div class="kpi-label">
+                    Real Expense
+                </div>
+
+                <div class="kpi-value">
+                    Rp {rupiah(total_actual)}
+                </div>
+
             </div>
 
-            <div class="kpi-value">
-                {remaining_label}
+            <div class="budget-financial-divider"></div>
+
+            <div class="budget-financial-item">
+
+                <div class="kpi-label">
+                    Remaining
+                </div>
+
+                <div class="kpi-value">
+                    {remaining_label}
+                </div>
+
             </div>
 
             <div class="kpi-accent"></div>
+
         </div>
         """
     )
@@ -3309,9 +5632,15 @@ with b2:
 
 with b3:
 
+    progress_position = min(
+        max(budget_used_pct, 0),
+        100
+    )
+
     st.html(
         f"""
-        <div class="kpi-card">
+        <div class="budget-race-card">
+
             <div class="kpi-label">
                 Budget Used
             </div>
@@ -3320,11 +5649,38 @@ with b3:
                 {budget_used_pct:.1f}%
             </div>
 
-            <div class="kpi-accent"></div>
+            <div class="budget-race">
+
+                <div class="budget-race-line"></div>
+
+                <div
+                    class="budget-race-car"
+                    style="left: calc({progress_position:.1f}% - 13px);"
+                >
+                    <span class="race-car-body">
+                        <span class="race-car-cockpit"></span>
+                        <span class="race-car-wheel race-wheel-front"></span>
+                        <span class="race-car-wheel race-wheel-rear"></span>
+                    </span>
+                </div>
+
+                <div class="budget-finish">
+                    <span class="finish-flag">
+                        <span class="flag-pole"></span>
+                        <span class="flag-cloth"></span>
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="budget-race-meta">
+                <span>START</span>
+                <span>FINISH</span>
+            </div>
+
         </div>
         """
     )
-
 
 # =========================================================
 # BUDGET BY CATEGORY
@@ -3351,134 +5707,476 @@ budget_category["Category"] = (
     .str.strip()
 )
 
+# ---------------------------------------------------------
+# DISPLAY ORDER
+# ---------------------------------------------------------
+
 budget_category = (
     budget_category
     .sort_values(
         "Planned",
-        ascending=True
+        ascending=False
     )
+    .reset_index(drop=True)
 )
 
+budget_lanes_html = ""
 
-fig_budget = px.bar(
-    budget_category,
-    x=[
-        "Planned",
-        "Actual"
-    ],
-    y="Category",
-    orientation="h",
-    barmode="group",
-)
+for _, row in budget_category.iterrows():
 
-# =========================================================
-# BUDGET CHART COLORS
-# =========================================================
-
-for trace in fig_budget.data:
-
-    if trace.name == "Planned":
-        trace.marker.color = "#7BC0EE"
-
-    elif trace.name == "Actual":
-        trace.marker.color = "#1468B3"
-
-fig_budget.update_traces(
-    hovertemplate=(
-        "<b>%{y}</b><br>"
-        "%{fullData.name}: Rp %{x:,.0f}"
-        "<extra></extra>"
+    category = escape(
+        str(row["Category"])
     )
-)
 
+    planned = float(row["Planned"])
+    actual = float(row["Actual"])
 
-fig_budget.update_layout(
-    title=dict(
-        text="Budget by Category",
-        font=dict(
-            size=21,
-            color="#203A5F"
-        ),
-        x=0
-    ),
+    planned_width = 100
 
-    height=430,
+    if planned > 0:
+        actual_ratio = (
+            actual / planned
+        )
 
-    margin=dict(
-        l=20,
-        r=110,
-        t=70,
-        b=45
-    ),
+        actual_width = min(
+            actual_ratio * 100,
+            100
+        )
 
-    paper_bgcolor="white",
-    plot_bgcolor="white",
+        overflow_width = max(
+            (actual_ratio - 1) * 100,
+            0
+        )
+    else:
+        actual_ratio = 0
+        actual_width = 0
+        overflow_width = 0
 
-    font=dict(
-        family="Inter",
-        size=13,
-        color="#203A5F"
-    ),
-
-    xaxis=dict(
-        title=dict(
-            text="Amount (IDR)",
-            font=dict(
-                size=13,
-                color="#203A5F"
-            )
-        ),
-
-        tickfont=dict(
-            size=12,
-            color="#203A5F"
-        ),
-
-        tickformat=",.0f",
-
-        gridcolor="#DCE5EF",
-
-        zeroline=True,
-        zerolinecolor="#8090A0"
-    ),
-
-    yaxis=dict(
-        title=None,
-
-        tickfont=dict(
-            size=13,
-            color="#203A5F"
-        ),
-
-        automargin=True
-    ),
-
-    legend=dict(
-    title=None,
-    orientation="h",
-    yanchor="bottom",
-    y=1.06,
-    xanchor="left",
-    x=0.5,
-
-    font=dict(
-        size=12,
-        color="#203A5F"
+    planned_label = (
+        f"Rp {rupiah(planned)}"
     )
-)
-)
+
+    actual_label = (
+        f"Rp {rupiah(actual)}"
+    )
+
+    if planned > 0:
+
+        variance_pct = (
+            (actual - planned)
+            / planned
+        ) * 100
+
+        if variance_pct > 0:
+
+            variance_html = f"""
+                <span class="budget-over-value">
+                    +{variance_pct:.1f}%
+                </span>
+            """
+
+        elif variance_pct < 0:
+
+            variance_html = f"""
+                <span class="budget-under-value">
+                    {variance_pct:.1f}%
+                </span>
+            """
+
+        else:
+
+            variance_html = """
+                <span class="budget-on-value">
+                    0.0%
+                </span>
+            """
+
+    else:
+
+        variance_html = ""
+
+    budget_lanes_html += f"""
+        <div class="budget-lane">
+
+            <div class="budget-lane-header">
+
+                <div class="budget-lane-category">
+                    {category}
+                </div>
+
+                <div class="budget-lane-values">
+                    <span class="budget-planned-value">
+                        {planned_label}
+                    </span>
+
+                   <span class="budget-actual-value">
+                        {actual_label}
+                    </span>
+
+                    {variance_html}
+                </div>
+
+            </div>
+
+            <div class="budget-lane-bars">
+
+                <div class="budget-lane-row">
+
+                    <div class="budget-lane-tag">
+                        P
+                    </div>
+
+                    <div class="budget-lane-track">
+
+                        <div
+                            class="budget-lane-bar budget-planned"
+                            style="width:{planned_width:.1f}%"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div class="budget-lane-row">
+
+                    <div class="budget-lane-tag budget-tag-actual">
+                        A
+                    </div>
+
+                    <div class="budget-lane-track">
+
+                        <div class="budget-actual-wrap">
+
+                            <div
+                                class="budget-lane-bar budget-actual"
+                                style="width:{actual_width:.1f}%"
+                            ></div>
+
+                            {
+                                f'''
+                                <div
+                                    class="budget-overflow"
+                                    style="width:{min(overflow_width, 25):.1f}%"
+                                ></div>
+                                '''
+                                if overflow_width > 0
+                                else ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    """
 
 
-st.plotly_chart(
-    fig_budget,
-    use_container_width=True,
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "responsive": True
-    }
-)
+st.html(
+    f"""
+    <style>
 
+    /* =====================================================
+       BUDGET LANES
+       ===================================================== */
+
+    .budget-lanes-card {{
+        position: relative;
+
+        width: 100%;
+
+        padding: 22px 22px 24px 22px;
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(126,192,238,0.11),
+                transparent 32%
+            ),
+            linear-gradient(
+                145deg,
+                #FFFFFF 0%,
+                #F8FAFC 100%
+            );
+
+        border: 1px solid rgba(190,205,220,0.75);
+
+        border-radius: 20px;
+
+        box-shadow:
+            0 8px 24px rgba(24,55,90,0.065),
+            inset 0 1px 0 rgba(255,255,255,0.95);
+
+        overflow: hidden;
+    }}
+
+    .budget-lanes-title {{
+        color: #203A5F;
+
+        font-size: 20px;
+        line-height: 1.15;
+
+        font-weight: 800;
+
+        letter-spacing: -0.45px;
+
+        margin-bottom: 13px;
+    }}
+
+    .budget-lanes-legend {{
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+        margin-bottom: 22px;
+    }}
+
+    .budget-legend-item {{
+        display: flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        color: #718398;
+
+        font-size: 9px;
+        font-weight: 700;
+
+        letter-spacing: 0.8px;
+
+        text-transform: uppercase;
+    }}
+
+    .budget-legend-dot {{
+        width: 8px;
+        height: 8px;
+
+        border-radius: 3px;
+    }}
+
+    .budget-legend-planned {{
+        background: #7BC0EE;
+    }}
+
+    .budget-legend-actual {{
+        background: #1468B3;
+    }}
+
+    .budget-lane {{
+        padding: 0 0 17px 0;
+
+        margin-bottom: 17px;
+
+        border-bottom:
+            1px solid #E8EEF4;
+    }}
+
+    .budget-lane:last-child {{
+        padding-bottom: 0;
+        margin-bottom: 0;
+
+        border-bottom: none;
+    }}
+
+    .budget-lane-header {{
+        display: flex;
+
+        align-items: baseline;
+
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 8px;
+    }}
+
+    .budget-lane-category {{
+        color: #526A82;
+
+        font-size: 11px;
+        font-weight: 800;
+
+        letter-spacing: 0.75px;
+
+        text-transform: uppercase;
+
+        white-space: nowrap;
+    }}
+
+    .budget-lane-values {{
+        display: flex;
+
+        gap: 8px;
+
+        align-items: baseline;
+
+        white-space: nowrap;
+    }}
+
+    .budget-planned-value {{
+        color: #8BA0B3;
+
+        font-size: 8px;
+        font-weight: 600;
+    }}
+
+    .budget-actual-value {{
+        color: #203A5F;
+
+        font-size: 9px;
+        font-weight: 800;
+    }}
+
+    .budget-lane-bars {{
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }}
+
+    .budget-lane-row {{
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+    }}
+
+    .budget-lane-tag {{
+        width: 12px;
+
+        color: #8BA0B3;
+
+        font-size: 7px;
+        font-weight: 800;
+
+        text-align: center;
+
+        letter-spacing: 0.3px;
+    }}
+
+    .budget-tag-actual {{
+        color: #1468B3;
+    }}
+
+    .budget-lane-track {{
+        flex: 1;
+
+        height: 6px;
+
+        background: #EDF2F6;
+
+        border-radius: 999px;
+
+        overflow: hidden;
+    }}
+
+    .budget-lane-bar {{
+        height: 100%;
+
+        min-width: 2px;
+
+        border-radius: 999px;
+    }}
+
+    .budget-planned {{
+        background:
+            linear-gradient(
+                90deg,
+                #7BC0EE 0%,
+                #A8D8F5 100%
+            );
+    }}
+
+    .budget-actual {{
+        background:
+            linear-gradient(
+                90deg,
+                #1468B3 0%,
+                #4F8FC5 100%
+            );
+
+        box-shadow:
+            0 0 7px rgba(20,104,179,0.16);
+    }}
+
+    @media (max-width: 768px) {{
+
+        .budget-lanes-card {{
+            padding: 20px 19px 21px 19px;
+
+            border-radius: 19px;
+        }}
+
+        .budget-lanes-title {{
+            font-size: 20px;
+        }}
+
+        .budget-lanes-legend {{
+            margin-bottom: 20px;
+        }}
+
+        .budget-lane {{
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+        }}
+
+        .budget-lane-category {{
+            font-size: 10px;
+        }}
+
+        .budget-lane-values {{
+            gap: 5px;
+        }}
+
+        .budget-planned-value {{
+            font-size: 7px;
+        }}
+
+        .budget-actual-value {{
+            font-size: 8px;
+        }}
+
+        .budget-lane-track {{
+            height: 7px;
+        }}
+
+    }}
+
+    </style>
+
+    <div class="budget-lanes-card">
+
+        <div class="budget-lanes-title">
+            Budget by Category
+        </div>
+
+        <div class="budget-lanes-legend">
+
+            <div class="budget-legend-item">
+                <span class="budget-legend-dot budget-legend-planned"></span>
+                Planned
+            </div>
+
+            <div class="budget-legend-item">
+                <span class="budget-legend-dot budget-legend-actual"></span>
+                Actual
+            </div>
+
+        </div>
+
+        {budget_lanes_html}
+
+    </div>
+    """
+)
 
 # =========================================================
 # TIME & PACE
@@ -4080,114 +6778,323 @@ time_group = (
 
 
 # =========================================================
-# TIME ALLOCATION CHART
+# TIME ALLOCATION
 # =========================================================
 
-fig_time = px.bar(
-    time_group,
-    x="Hours",
-    y="Activity",
-    orientation="h",
-    text="Hours",
+time_group = (
+    itinerary
+    .groupby("_category")["_hours"]
+    .sum()
+    .reset_index()
+)
+
+time_group.columns = [
+    "Activity",
+    "Hours"
+]
+
+time_group["Activity"] = (
+    time_group["Activity"]
+    .astype(str)
+    .str.strip()
+)
+
+time_group["Hours"] = pd.to_numeric(
+    time_group["Hours"],
+    errors="coerce"
+).fillna(0)
+
+time_group = (
+    time_group[
+        time_group["Hours"] > 0
+    ]
+    .sort_values(
+        "Hours",
+        ascending=False
+    )
+    .reset_index(drop=True)
 )
 
 
-fig_time.update_traces(
+total_time_hours = (
+    time_group["Hours"].sum()
+    if not time_group.empty
+    else 0
+)
 
-    texttemplate="%{text:.1f} h",
-
-    textposition="outside",
-
-    cliponaxis=False,
-
-    hovertemplate=(
-        "<b>%{y}</b><br>"
-        "Actual time: %{x:.1f} h"
-        "<extra></extra>"
-    ),
+max_time_hours = (
+    time_group["Hours"].max()
+    if not time_group.empty
+    else 1
 )
 
 
-fig_time.update_layout(
+time_lanes_html = ""
 
-    title=dict(
-        text="Time Allocation",
-        font=dict(
-            size=22,
-            color="#203A5F",
-        ),
-        x=0,
-        xanchor="left",
-    ),
+for _, row in time_group.iterrows():
 
-    height=max(
-        360,
-        90 + len(time_group) * 52,
-    ),
+    activity = escape(
+        str(row["Activity"])
+    )
 
-    margin=dict(
-        l=110,
-        r=75,
-        t=75,
-        b=55,
-    ),
+    activity_hours = float(
+        row["Hours"]
+    )
 
-    paper_bgcolor="white",
-    plot_bgcolor="white",
+    bar_width = (
+        activity_hours
+        / max_time_hours
+    ) * 100
 
-    font=dict(
-        family="Inter",
-        size=13,
-        color="#203A5F",
-    ),
+    share = (
+        activity_hours
+        / total_time_hours
+        * 100
+        if total_time_hours > 0
+        else 0
+    )
 
-    xaxis=dict(
-        title=dict(
-            text="Hours",
-            font=dict(
-                size=13,
-                color="#203A5F",
+    time_lanes_html += f"""
+        <div class="time-lane">
+
+            <div class="time-lane-header">
+
+                <div class="time-lane-name">
+                    {activity}
+                </div>
+
+                <div class="time-lane-value">
+                    {activity_hours:.1f} h
+                    <span>
+                        {share:.1f}%
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="time-lane-track">
+
+                <div
+                    class="time-lane-bar"
+                    style="width:{bar_width:.1f}%"
+                ></div>
+
+            </div>
+
+        </div>
+    """
+
+
+st.html(
+    f"""
+    <style>
+
+    .time-profile-card {{
+        position: relative;
+        width: 100%;
+
+        padding: 22px 22px 24px 22px;
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(126,192,238,0.11),
+                transparent 32%
             ),
-        ),
+            linear-gradient(
+                145deg,
+                #FFFFFF 0%,
+                #F8FAFC 100%
+            );
 
-        tickfont=dict(
-            size=12,
-            color="#203A5F",
-        ),
+        border: 1px solid rgba(190,205,220,0.75);
+        border-radius: 20px;
 
-        gridcolor="#DCE5EF",
+        box-shadow:
+            0 8px 24px rgba(24,55,90,0.065),
+            inset 0 1px 0 rgba(255,255,255,0.95);
 
-        zeroline=False,
+        overflow: hidden;
+    }}
 
-        fixedrange=True,
-    ),
+    .time-profile-title {{
+        color: #203A5F;
 
-    yaxis=dict(
-        title=None,
+        font-size: 20px;
+        line-height: 1.15;
 
-        tickfont=dict(
-            size=13,
-            color="#203A5F",
-        ),
+        font-weight: 800;
+        letter-spacing: -0.45px;
 
-        automargin=True,
+        margin-bottom: 16px;
+    }}
 
-        fixedrange=True,
+    .time-profile-summary {{
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
 
-        autorange="reversed",
-    ),
-)
+        padding-bottom: 16px;
+        margin-bottom: 4px;
 
+        border-bottom: 1px solid #E8EEF4;
+    }}
 
-st.plotly_chart(
-    fig_time,
-    use_container_width=True,
+    .time-profile-summary-label {{
+        color: #718398;
 
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "responsive": True,
-    },
+        font-size: 9px;
+        font-weight: 700;
+
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }}
+
+    .time-profile-summary-value {{
+        color: #17365D;
+
+        font-size: 18px;
+        font-weight: 800;
+
+        letter-spacing: -0.4px;
+    }}
+
+    .time-lane {{
+        padding: 14px 0 15px 0;
+
+        border-bottom: 1px solid #E8EEF4;
+    }}
+
+    .time-lane:last-child {{
+        border-bottom: none;
+        padding-bottom: 2px;
+    }}
+
+    .time-lane-header {{
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+
+        gap: 10px;
+        margin-bottom: 7px;
+    }}
+
+    .time-lane-name {{
+        color: #526A82;
+
+        font-size: 10px;
+        font-weight: 800;
+
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }}
+
+    .time-lane-value {{
+        color: #203A5F;
+
+        font-size: 10px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }}
+
+    .time-lane-value span {{
+        color: #8BA0B3;
+
+        font-size: 8px;
+        font-weight: 700;
+
+        margin-left: 5px;
+    }}
+
+    .time-lane-track {{
+        width: 100%;
+        height: 7px;
+
+        background: #EDF2F6;
+
+        border-radius: 999px;
+        overflow: hidden;
+    }}
+
+    .time-lane-bar {{
+        height: 100%;
+        min-width: 2px;
+
+        background:
+            linear-gradient(
+                90deg,
+                #4F6BED 0%,
+                #7EC0EE 100%
+            );
+
+        border-radius: 999px;
+
+        box-shadow:
+            0 0 8px rgba(79,107,237,0.15);
+    }}
+
+    @media (max-width: 768px) {{
+
+        .time-profile-card {{
+            padding: 20px 19px 21px 19px;
+            border-radius: 19px;
+        }}
+
+        .time-profile-title {{
+            font-size: 20px;
+        }}
+
+        .time-profile-summary {{
+            padding-bottom: 14px;
+        }}
+
+        .time-profile-summary-value {{
+            font-size: 17px;
+        }}
+
+        .time-lane {{
+            padding: 13px 0 14px 0;
+        }}
+
+        .time-lane-name {{
+            font-size: 10px;
+        }}
+
+        .time-lane-value {{
+            font-size: 9px;
+        }}
+
+        .time-lane-track {{
+            height: 7px;
+        }}
+
+    }}
+
+    </style>
+
+    <div class="time-profile-card">
+
+        <div class="time-profile-title">
+            Time Allocation
+        </div>
+
+        <div class="time-profile-summary">
+
+            <div class="time-profile-summary-label">
+                Trip Time Mix
+            </div>
+
+            <div class="time-profile-summary-value">
+                {total_time_hours:.1f} h
+            </div>
+
+        </div>
+
+        {time_lanes_html}
+
+    </div>
+    """
 )
 
 # =========================================================
@@ -4234,142 +7141,363 @@ if not daily_hours.empty:
     )
 
 # =========================================================
-# DAILY ACTIVITY HOURS — VISUAL
+# DAILY ACTIVITY HOURS — ACTIVITY RHYTHM
 # =========================================================
 
-fig_activity = px.bar(
-    daily_hours,
-    x="Label",
-    y="_hours",
-    text="_hours",
+max_daily_hours = (
+    daily_hours["_hours"].max()
+    if not daily_hours.empty
+    else 1
 )
 
-fig_activity.update_traces(
-    texttemplate="%{text:.1f} h",
-    textposition="outside",
-    cliponaxis=False,
+daily_rhythm_html = ""
 
-    hovertemplate=(
-        "<b>%{x}</b><br>"
-        "Actual activity: %{y:.1f} h"
-        "<extra></extra>"
-    ),
+for _, row in daily_hours.iterrows():
 
-    marker=dict(
-        color="#7EC0EE"
-    ),
-)
+    day_label = escape(
+        str(row["Label"])
+    )
 
-fig_activity.update_layout(
-    title=dict(
-        text="Daily Activity Hours",
-        font=dict(
-            size=22,
-            color="#203A5F",
-        ),
-        x=0,
-        xanchor="left",
-    ),
+    hours_value = float(
+        row["_hours"]
+    )
 
-    height=430,
+    bar_width = (
+        hours_value
+        / max_daily_hours
+        * 100
+        if max_daily_hours > 0
+        else 0
+    )
 
-    margin=dict(
-        l=55,
-        r=45,
-        t=75,
-        b=70,
-    ),
+    if hours_value >= 8:
+        pace_class = "pace-high"
+        pace_label = "FULL"
+    elif hours_value >= 5:
+        pace_class = "pace-medium"
+        pace_label = "ACTIVE"
+    elif hours_value > 0:
+        pace_class = "pace-light"
+        pace_label = "LIGHT"
+    else:
+        pace_class = "pace-empty"
+        pace_label = "REST"
 
-    paper_bgcolor="white",
-    plot_bgcolor="white",
+    daily_rhythm_html += f"""
+        <div class="rhythm-day {pace_class}">
 
-    font=dict(
-        family="Inter",
-        size=13,
-        color="#203A5F",
-    ),
+            <div class="rhythm-day-top">
 
-    xaxis=dict(
-        title=dict(
-            text="Date",
-            font=dict(
-                size=13,
-                color="#203A5F",
+                <div class="rhythm-day-label">
+                    {day_label}
+                </div>
+
+                <div class="rhythm-day-hours">
+                    {hours_value:.1f}h
+                </div>
+
+            </div>
+
+            <div class="rhythm-track">
+
+                <div
+                    class="rhythm-bar"
+                    style="width:{bar_width:.1f}%"
+                ></div>
+
+            </div>
+
+            <div class="rhythm-status">
+                {pace_label}
+            </div>
+
+        </div>
+    """
+
+
+st.html(
+    f"""
+    <style>
+
+    /* =====================================================
+       DAILY ACTIVITY — ACTIVITY RHYTHM
+       ===================================================== */
+
+    .activity-rhythm-card {{
+        position: relative;
+
+        width: 100%;
+
+        padding: 22px 22px 24px 22px;
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(126,192,238,0.12),
+                transparent 34%
             ),
-        ),
+            linear-gradient(
+                145deg,
+                #FFFFFF 0%,
+                #F8FAFC 100%
+            );
 
-        tickfont=dict(
-            size=12,
-            color="#203A5F",
-        ),
+        border: 1px solid rgba(190,205,220,0.75);
 
-        showgrid=False,
-        fixedrange=True,
-    ),
+        border-radius: 20px;
 
-    yaxis=dict(
-        title=dict(
-            text="Active Hours",
-            font=dict(
-                size=13,
-                color="#203A5F",
+        box-shadow:
+            0 8px 24px rgba(24,55,90,0.065),
+            inset 0 1px 0 rgba(255,255,255,0.95);
+
+        overflow: hidden;
+    }}
+
+    .rhythm-header {{
+        display: flex;
+
+        align-items: flex-end;
+        justify-content: space-between;
+
+        margin-bottom: 17px;
+    }}
+
+    .rhythm-title {{
+        color: #203A5F;
+
+        font-size: 20px;
+        line-height: 1.1;
+
+        font-weight: 800;
+
+        letter-spacing: -0.45px;
+    }}
+
+    .rhythm-reference {{
+        color: #8BA0B3;
+
+        font-size: 8px;
+        font-weight: 700;
+
+        letter-spacing: 0.8px;
+
+        text-transform: uppercase;
+
+        white-space: nowrap;
+    }}
+
+    .rhythm-reference strong {{
+        color: #637B94;
+
+        font-weight: 800;
+    }}
+
+    .rhythm-grid {{
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 9px;
+    }}
+
+    .rhythm-day {{
+        position: relative;
+
+        padding: 11px 11px 10px 11px;
+
+        background:
+            linear-gradient(
+                145deg,
+                #FFFFFF 0%,
+                #F7FAFC 100%
+            );
+
+        border:
+            1px solid #E1E9F0;
+
+        border-radius: 13px;
+
+        min-width: 0;
+
+        overflow: hidden;
+    }}
+
+    .rhythm-day-top {{
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 6px;
+
+        margin-bottom: 8px;
+    }}
+
+    .rhythm-day-label {{
+        color: #526A82;
+
+        font-size: 9px;
+        font-weight: 800;
+
+        letter-spacing: 0.7px;
+
+        text-transform: uppercase;
+    }}
+
+    .rhythm-day-hours {{
+        color: #203A5F;
+
+        font-size: 11px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }}
+
+    .rhythm-track {{
+        width: 100%;
+
+        height: 5px;
+
+        background: #EAF0F4;
+
+        border-radius: 999px;
+
+        overflow: hidden;
+    }}
+
+    .rhythm-bar {{
+        height: 100%;
+
+        min-width: 0;
+
+        background:
+            linear-gradient(
+                90deg,
+                #4F6BED 0%,
+                #7EC0EE 100%
+            );
+
+        border-radius: 999px;
+
+        box-shadow:
+            0 0 7px rgba(79,107,237,0.16);
+    }}
+
+    .rhythm-status {{
+        margin-top: 6px;
+
+        color: #9AAABA;
+
+        font-size: 7px;
+        font-weight: 800;
+
+        letter-spacing: 0.75px;
+
+        text-transform: uppercase;
+    }}
+
+    .pace-high {{
+        border-color:
+            rgba(79,107,237,0.24);
+
+        background:
+            radial-gradient(
+                circle at 100% 0%,
+                rgba(126,192,238,0.10),
+                transparent 45%
             ),
-        ),
+            #FFFFFF;
+    }}
 
-        tickfont=dict(
-            size=12,
-            color="#203A5F",
-        ),
+    .pace-high .rhythm-status {{
+        color: #4F6BED;
+    }}
 
-        gridcolor="#DCE5EF",
-        rangemode="tozero",
-        fixedrange=True,
-    ),
+    .pace-medium .rhythm-status {{
+        color: #637B94;
+    }}
 
-    # Reference line: 12 active hours.
-    shapes=[
-        dict(
-            type="line",
-            xref="paper",
-            x0=0,
-            x1=1,
-            yref="y",
-            y0=12,
-            y1=12,
-            line=dict(
-                color="#AAB8C6",
-                width=1,
-                dash="dash",
-            ),
-        )
-    ],
+    .pace-light .rhythm-status {{
+        color: #9AAABA;
+    }}
 
-    annotations=[
-        dict(
-            xref="paper",
-            x=1,
-            yref="y",
-            y=12,
-            text="12h",
-            showarrow=False,
-            xanchor="left",
-            yanchor="bottom",
-            font=dict(
-                size=11,
-                color="#637B94",
-            ),
-        )
-    ],
-)
+    .pace-empty {{
+        opacity: 0.65;
+    }}
 
-st.plotly_chart(
-    fig_activity,
-    use_container_width=True,
-    config={
-        "displayModeBar": False,
-        "scrollZoom": False,
-        "responsive": True,
-    },
+    .pace-empty .rhythm-bar {{
+        min-width: 2px;
+    }}
+
+    @media (max-width: 768px) {{
+
+        .activity-rhythm-card {{
+            padding: 20px 18px 21px 18px;
+
+            border-radius: 19px;
+        }}
+
+        .rhythm-title {{
+            font-size: 20px;
+        }}
+
+        .rhythm-reference {{
+            font-size: 7px;
+        }}
+
+        .rhythm-grid {{
+            gap: 8px;
+        }}
+
+        .rhythm-day {{
+            padding: 10px 10px 9px 10px;
+
+            border-radius: 12px;
+        }}
+
+        .rhythm-day-label {{
+            font-size: 8px;
+        }}
+
+        .rhythm-day-hours {{
+            font-size: 10px;
+        }}
+
+        .rhythm-track {{
+            height: 5px;
+        }}
+
+        .rhythm-status {{
+            font-size: 6.5px;
+        }}
+
+    }}
+
+    </style>
+
+    <div class="activity-rhythm-card">
+
+        <div class="rhythm-header">
+
+            <div class="rhythm-title">
+                Daily Activity
+            </div>
+
+            <div class="rhythm-reference">
+                Pace · <strong>{max_daily_hours:.1f}h peak</strong>
+            </div>
+
+        </div>
+
+        <div class="rhythm-grid">
+
+            {daily_rhythm_html}
+
+        </div>
+
+    </div>
+    """
 )
 
 # =========================================================
@@ -4454,6 +7582,22 @@ maps_url_col = find_col(
     ]
 )
 
+# =========================================================
+# DESTINATION DISPLAY EXCLUSIONS
+# =========================================================
+
+EXCLUDED_DESTINATION_CITIES = {
+    "bandung",
+    "tangerang",
+    "singapore",
+}
+
+EXCLUDED_DESTINATION_CATEGORIES = {
+    "transport hub",
+    "motorbike rental",
+    "ferry pier",
+    "event",
+}
 
 # =========================================================
 # CITY FILTER
@@ -4472,13 +7616,16 @@ if city_col and not places.empty:
         [
             city
             for city in destination_cities.unique()
-            if city
+            if (
+                city
+                and city.casefold()
+                not in EXCLUDED_DESTINATION_CITIES
+            )
         ]
     )
 
 else:
     destination_cities = []
-
 
 city_options = ["ALL"] + destination_cities
 
@@ -4495,10 +7642,77 @@ selected_city = st.selectbox(
 
 
 # =========================================================
+# CATEGORY FILTER
+# =========================================================
+
+if category_col and not places.empty:
+
+    destination_categories = (
+        places[category_col]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+    )
+
+    destination_categories = sorted(
+        [
+            category
+            for category in destination_categories.unique()
+            if (
+                category
+                and category.casefold()
+                not in EXCLUDED_DESTINATION_CATEGORIES
+            )
+        ]
+    )
+
+else:
+    destination_categories = []
+
+
+category_options = ["ALL"] + destination_categories
+
+selected_category = st.selectbox(
+    "Filter destination category",
+    category_options,
+    format_func=lambda x:
+        "All Categories"
+        if x == "ALL"
+        else x.upper(),
+    label_visibility="collapsed",
+    key="destination_category_filter"
+)
+
+
+# =========================================================
 # FILTER DATA
 # =========================================================
 
 destination_view = places.copy()
+
+
+# Remove non-destination cities
+if city_col:
+    destination_view = destination_view[
+        ~destination_view[city_col]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .str.casefold()
+        .isin(EXCLUDED_DESTINATION_CITIES)
+    ].copy()
+
+
+# Remove non-destination categories
+if category_col:
+    destination_view = destination_view[
+        ~destination_view[category_col]
+        .fillna("")
+        .astype(str)
+        .str.strip()
+        .str.casefold()
+        .isin(EXCLUDED_DESTINATION_CATEGORIES)
+    ].copy()
 
 if (
     selected_city != "ALL"
@@ -4509,6 +7723,18 @@ if (
         .astype(str)
         .str.strip()
         == selected_city
+    ].copy()
+
+
+if (
+    selected_category != "ALL"
+    and category_col
+):
+    destination_view = destination_view[
+        destination_view[category_col]
+        .astype(str)
+        .str.strip()
+        == selected_category
     ].copy()
 
 
@@ -4763,6 +7989,52 @@ else:
         itinerary.copy()
     )
 
+# =========================================================
+# ITINERARY PLACE NAME MAP
+# =========================================================
+
+place_id_map = {}
+
+if not places.empty:
+
+    places_id_col = find_col(
+        places,
+        [
+            "place_id",
+            "location_id",
+            "id",
+        ]
+    )
+
+    places_name_col = find_col(
+        places,
+        [
+            "place_name",
+            "name",
+            "location_name",
+        ]
+    )
+
+    if (
+        places_id_col
+        and places_name_col
+    ):
+
+        for _, place_row in places.iterrows():
+
+            place_id = clean(
+                place_row[places_id_col]
+            )
+
+            place_name = clean(
+                place_row[places_name_col]
+            )
+
+            if place_id and place_name:
+
+                place_id_map[
+                    place_id.casefold()
+                ] = place_name
 
 # =========================================================
 # ITINERARY DISPLAY
@@ -4813,9 +8085,6 @@ else:
             '<div class="itinerary-day-name">'
             + escape(date_label) +
             '</div>'
-            '<div class="itinerary-day-meta">'
-            'Your planned itinerary'
-            '</div>'
             '</div>'
             '<div class="itinerary-day-count">'
             + str(item_count) + ' ' + item_word +
@@ -4845,8 +8114,24 @@ else:
                     else "—"
                 )
 
-            activity = clean(row[activity_col]) if activity_col else "Activity"
-            place = clean(row[place_col]) if place_col else ""
+            activity = (
+                clean(row[activity_col])
+                if activity_col
+                else "Activity"
+            )
+
+            place = (
+                clean(row[place_col])
+                if place_col
+                else ""
+            )
+
+            place_display = (
+                place_id_map.get(
+                    place.casefold(),
+                    place
+                )
+            )
             note = clean(row[notes_col]) if notes_col else ""
             mode = clean(row[transport_mode_col]) if transport_mode_col else ""
             group = clean(row[group_col]) if group_col else ""
@@ -4896,10 +8181,20 @@ else:
                 )
 
             place_html = ""
-            if place:
+
+            place_text = (
+                place_display
+                if "place_display" in locals()
+                else place
+            )
+
+            if (
+                place_text
+                and classified != "Transport"
+            ):
                 place_html = (
                     '<div class="itinerary-place">📍 '
-                    + escape(place) +
+                    + escape(place_text) +
                     '</div>'
                 )
 
@@ -5508,11 +8803,15 @@ else:
                 </div>
 
             </div>
+        """
 
+        if notes:
+
+            card_html += f"""
             <div class="booking-notes">
                 {escape(notes)}
             </div>
-        """
+            """
 
         if booking_url:
 
